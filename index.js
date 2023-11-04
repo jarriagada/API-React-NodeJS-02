@@ -1,0 +1,1 @@
+console.log("Dependencias instaladas, mongoose 6.4.3")
