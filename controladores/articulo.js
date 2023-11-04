@@ -1,6 +1,8 @@
 
 const validator = require("validator");
 
+const Articulo = require("../modelos/Articulo");
+
 //metodo prueba GET
 const prueba = (req, res) =>{
 
@@ -61,12 +63,36 @@ const crear = (req, res) => {
 
     }
 
-    return res.status(200).json({
-        mensaje: "metodo crear aticulo funcionando desdde el controlador",
-        parametros
+    //3. crear el objeto a guardar, del model de articulo
+    // se le pasan los urlparams req.body
+    const articulo = new Articulo(parametros);
+    //4. asignar valores al objeto basado en el modelo
+    //la version 6.4.3 de mongoose es con call-back
+    articulo.save((error, articuloGuardado) => {
+
+        if(error || !articuloGuardado) {
+            return res.status(400).json({
+                mensaje: "Faltan datos por enviar",
+                status: "error"
+            })
+        }
+
+        return res.status(200).json({
+            status: "success",
+            articulo: articuloGuardado,
+            mensaje: "Articulo creado con exito"
+        })
+
     })
-    
+
+    //5. guardar el articulo en la base de datos 
+
+    //6. Devolver resultados
+
+
 }
+
+
 module.exports = {
     prueba,
     curso,
