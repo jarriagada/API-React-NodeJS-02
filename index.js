@@ -24,7 +24,6 @@ app.use(express.urlencoded({extended:true})); //formato x-www-form-urlencoded
 //RUTAS
 const rutas_articulo = require("./rutas/articulo");
 
-
 //Cargo las rutas automaicas
 app.use("/api", rutas_articulo);
 

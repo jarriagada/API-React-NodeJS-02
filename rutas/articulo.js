@@ -8,6 +8,7 @@ router.get("/curso", ArticuloControlador.curso );
 
 //Ruta util uso de metodo post
 router.post("/crear", ArticuloControlador.crear)
+router.get("/articulos", ArticuloControlador.listar );
 
 module.exports = router;
 

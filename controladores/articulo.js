@@ -75,26 +75,53 @@ const crear = (req, res) => {
                 mensaje: "Faltan datos por enviar",
                 status: "error"
             })
+    
         }
-
+    
         return res.status(200).json({
             status: "success",
             articulo: articuloGuardado,
             mensaje: "Articulo creado con exito"
         })
 
-    })
+    })// fin crear articulo
+}
+
+    //conseguir articulo
+    //va a hacer una consulta a la base de datos y devolvera un resultado
+    const listar = (req, res) => {
+        //Articulo es el modelo
+        let consulta = Articulo.find({}).exec((error, articulos) => {
+
+            if(error || !articulos){
+
+                return res.status(404).json({
+                    status: "error",
+                    mensaje: "No se encontraron articulos"
+                   
+                });
+            }
+
+            return res.status(200).send({
+                status: "success",
+                articulos
+            });
+
+
+        });
+    }
 
     //5. guardar el articulo en la base de datos 
 
     //6. Devolver resultados
 
 
-}
+
 
 
 module.exports = {
     prueba,
     curso,
-    crear
+    crear,
+    listar
 }
