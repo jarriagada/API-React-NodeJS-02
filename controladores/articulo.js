@@ -1,6 +1,5 @@
 
-const validator = require("validator");
-
+const {validarArticulo} = require("../helper/validar");
 const Articulo = require("../modelos/Articulo");
 
 //metodo prueba GET
@@ -41,18 +40,9 @@ const crear = (req, res) => {
     let parametros = req.body;
 
     //2.Validar los datos
-
     try{
 
-        let validar_Titulo = !validator.isEmpty(parametros.titulo) &&
-                            validator.isLength(parametros.titulo, {min: 5, max: 25});
-
-        let validar_Contenido = !validator.isEmpty(parametros.contenido) 
-
-        if(!validar_Titulo || !validar_Contenido){
-           throw new Error("No se ha podido validar")
-            
-        }
+      validarArticulo(parametros);
 
     } catch(error){
 
@@ -85,8 +75,10 @@ const crear = (req, res) => {
         })
 
     })// fin crear articulo
-}
+}; //fin crear
 
+
+    //metodo listar todo con limite de 3 para el home
     //conseguir articulo
     //va a hacer una consulta a la base de datos y devolvera un resultado
     const listar = (req, res) => {
@@ -120,9 +112,9 @@ const crear = (req, res) => {
 
 
         });
-    }
+    }; //fin listar
 
-
+    //metodo buscar uno por id
     const uno = (req, res) => {
 
         //recofer un id por la url
@@ -153,6 +145,7 @@ const crear = (req, res) => {
     };
     // fin uno
 
+    //Metodo delete
     const borrar = (req, res) => {
 
         // obtener el id de parametros
@@ -178,9 +171,9 @@ const crear = (req, res) => {
 
         });
 
-    }
+    }; //fin borrar
 
-    //Editar articulo
+    //Editar articulo metodo put
     const editar = (req, res) => {
         //recoger id articulo a editar
         let articuloId = req.params.id;
@@ -188,25 +181,20 @@ const crear = (req, res) => {
         //recoger datos del body
         let parametros = req.body;
 
-        //Validar datos
-        try{
 
-            let validar_Titulo = !validator.isEmpty(parametros.titulo) &&
-                                validator.isLength(parametros.titulo, {min: 5, max: 25});
+    try {
+        //Validar datos
+        validarArticulo(parametros)
+
+    } catch(error){
     
-            let validar_Contenido = !validator.isEmpty(parametros.contenido) 
-    
-            if(!validar_Titulo || !validar_Contenido){
-               throw new Error("No se ha podido validar")
-            }
-    
-        } catch(error){
-    
-            return res.status(400).json({
-                mensaje: "Faltan datos por enviar",
-                status: "error"
-            })
-        }
+        return res.status(400).json({
+            mensaje: "Faltan datos por enviar",
+            status: "error"
+        })
+
+    }
+
         //Buscar Y Actualizar articulo, usando el modelo, con la opcion new:true devuelve el objeto actualizado
         Articulo.findOneAndUpdate({_id: articuloId}, req.body, {new:true}, (error, articuloActualizado) => {
 
@@ -227,12 +215,7 @@ const crear = (req, res) => {
 
         });
 
-
-    
-
-    };//FINAL
-   
-
+    };//FIN editar uno
 
 
 
