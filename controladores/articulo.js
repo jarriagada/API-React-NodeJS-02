@@ -77,7 +77,7 @@ const crear = (req, res) => {
             })
     
         }
-    
+    //5. guardar el articulo en la base de datos 
         return res.status(200).json({
             status: "success",
             articulo: articuloGuardado,
@@ -91,7 +91,15 @@ const crear = (req, res) => {
     //va a hacer una consulta a la base de datos y devolvera un resultado
     const listar = (req, res) => {
         //Articulo es el modelo
-        let consulta = Articulo.find({}).exec((error, articulos) => {
+        let consulta = Articulo.find({}); 
+
+        if(req.params.ultimos ) {
+            consulta.limit(3);
+        }
+
+        
+        consulta.sort({fecha: -1})
+                .exec((error, articulos) => {
 
             if(error || !articulos){
 
@@ -102,8 +110,11 @@ const crear = (req, res) => {
                 });
             }
 
+            //6. Devolver resultados
             return res.status(200).send({
                 status: "success",
+                parametro: req.params.ultimos,
+                contador: articulos.length,
                 articulos
             });
 
@@ -111,17 +122,40 @@ const crear = (req, res) => {
         });
     }
 
-    //5. guardar el articulo en la base de datos 
 
-    //6. Devolver resultados
+    const uno = (req, res) => {
+        //recofer un id por la url
+        let id = req.params.id;
 
+        //buscar el articulo, usando el Modelo Articulo
+        Articulo.findById(id, (error, articulo) => {
 
+        // si no existe devolver error
+        if(error || !articulo){
 
+            return res.status(404).json({
+                status: "error",
+                mensaje: "No se encontro el articulo"
+               
+            });
+        }
+
+        return res.status(200).json({
+            status: "success",
+            articulo
+        })
+        
+        // si existe devolver resultado
+
+        })
+       
+    }
 
 
 module.exports = {
     prueba,
     curso,
     crear,
-    listar
+    listar,
+    uno
 }
