@@ -156,10 +156,10 @@ const crear = (req, res) => {
     const borrar = (req, res) => {
 
         // obtener el id de parametros
-        const articulo_id = req.params.id;
+        const articuloId = req.params.id;
 
         // uso del modelo para la consulta
-        Articulo.findOneAndDelete({_id: articulo_id}, (error, articuloBorrado) => {
+        Articulo.findOneAndDelete({_id: articuloId}, (error, articuloBorrado) => {
 
             if(error || !articuloBorrado) {
 
@@ -180,6 +180,61 @@ const crear = (req, res) => {
 
     }
 
+    //Editar articulo
+    const editar = (req, res) => {
+        //recoger id articulo a editar
+        let articuloId = req.params.id;
+
+        //recoger datos del body
+        let parametros = req.body;
+
+        //Validar datos
+        try{
+
+            let validar_Titulo = !validator.isEmpty(parametros.titulo) &&
+                                validator.isLength(parametros.titulo, {min: 5, max: 25});
+    
+            let validar_Contenido = !validator.isEmpty(parametros.contenido) 
+    
+            if(!validar_Titulo || !validar_Contenido){
+               throw new Error("No se ha podido validar")
+            }
+    
+        } catch(error){
+    
+            return res.status(400).json({
+                mensaje: "Faltan datos por enviar",
+                status: "error"
+            })
+        }
+        //Buscar Y Actualizar articulo, usando el modelo, con la opcion new:true devuelve el objeto actualizado
+        Articulo.findOneAndUpdate({_id: articuloId}, req.body, {new:true}, (error, articuloActualizado) => {
+
+            if(error || !articuloActualizado){
+                return res.status(500).json({
+                    status:"error",
+                    mensaje: "error al actualizar"
+                });
+            }
+
+
+            //Devolver respuesta
+            return res.status(200).json({
+                status: "succes",
+                articulo: articuloActualizado
+
+            })
+
+        });
+
+
+    
+
+    };//FINAL
+   
+
+
+
 
 module.exports = {
     prueba,
@@ -187,5 +242,6 @@ module.exports = {
     crear,
     listar,
     uno, 
-    borrar
+    borrar,
+    editar
 }

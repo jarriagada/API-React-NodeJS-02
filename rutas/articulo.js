@@ -11,6 +11,7 @@ router.post("/crear", ArticuloControlador.crear)
 router.get("/articulos/:ultimos?", ArticuloControlador.listar );
 router.get("/articulo/:id", ArticuloControlador.uno );
 router.delete("/articulo/:id", ArticuloControlador.borrar );
+router.put("/articulo/:id", ArticuloControlador.editar ); //metodo http para actualizar
 
 module.exports = router;
 
