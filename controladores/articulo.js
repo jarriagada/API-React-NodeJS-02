@@ -124,6 +124,7 @@ const crear = (req, res) => {
 
 
     const uno = (req, res) => {
+
         //recofer un id por la url
         let id = req.params.id;
 
@@ -149,6 +150,34 @@ const crear = (req, res) => {
 
         })
        
+    };
+    // fin uno
+
+    const borrar = (req, res) => {
+
+        // obtener el id de parametros
+        const articulo_id = req.params.id;
+
+        // uso del modelo para la consulta
+        Articulo.findOneAndDelete({_id: articulo_id}, (error, articuloBorrado) => {
+
+            if(error || !articuloBorrado) {
+
+                return res.status(500).json({
+                    status: "error",
+                    mensaje: "No se elimino el articulo"
+    
+                });
+            }
+
+            return res.status(200).json({
+                status: "success",
+                articulo: articuloBorrado,
+                mensaje: "Articulo borrado..."
+            })
+
+        });
+
     }
 
 
@@ -157,5 +186,6 @@ module.exports = {
     curso,
     crear,
     listar,
-    uno
+    uno, 
+    borrar
 }
