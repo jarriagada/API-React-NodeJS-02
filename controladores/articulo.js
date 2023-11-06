@@ -285,7 +285,7 @@ const crear = (req, res) => {
 
         fs.stat(ruta_fisica, (error, existe) => {
             if(existe){
-                return res.sendfile(path.resolve(ruta_fisica));
+                return res.sendFile(path.resolve(ruta_fisica));
             }else {
                 return res.status(404).json({
                     status: "error", 
@@ -298,6 +298,43 @@ const crear = (req, res) => {
         })
     };
 
+const buscador = (req, res) => {
+
+    //Sacar el string de busqueda
+    let busqueda = req.params.busqueda
+    //find Or...
+    Articulo.find({
+        "$or": [
+            { "titulo": { "$regex": busqueda, "$options": "i" } }, //"i" si incluye el string de busqueda?
+            { "contenido": { "$regex": busqueda, "$options": "i" } },
+
+        ]
+    })
+        //Orden
+        .sort({ fecha: -1 })
+        //ejecutar consulta
+        //devolver el resultado
+        .exec((error, articulosEncontrados) => {
+
+            if (error || !articulosEncontrados) {
+
+                return res.status(404).json({
+                    status: "error",
+                    mensaje: "no se han encontrado articulos con el criterio de busqueda"
+                })
+            }
+
+            return res.status(200).json({
+                status: "success",
+                articulosEncontrados
+            })
+
+       } );
+
+};
+
+
+
 module.exports = {
     prueba,
     curso,
@@ -307,5 +344,6 @@ module.exports = {
     borrar,
     editar,
     subir,
-    imagen
+    imagen,
+    buscador
 }

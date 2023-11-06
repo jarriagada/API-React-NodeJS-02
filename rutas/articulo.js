@@ -32,6 +32,8 @@ router.put("/articulo/:id", ArticuloControlador.editar ); //metodo http para act
 //subir imagen
 router.post("/subir-imagen/:id", [subidas.single("file0")], ArticuloControlador.subir)
 router.get("/imagen/:fichero", ArticuloControlador.imagen );
+//buscar
+router.get("/buscar/:busqueda", ArticuloControlador.buscador );
 
 
 
